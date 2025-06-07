@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Blue Chat Bot</title>
+    <style>
+        :root {
+            --neon-blue: #00a8ff;
+            --neon-dark: #0c2461;
+            --neon-glow: rgba(0, 168, 255, 0.7);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a192f;
+            color: #e6f1ff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            background: rgba(12, 36, 97, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 0 20px var(--neon-glow);
+            border: 1px solid var(--neon-blue);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 15px;
+            background: linear-gradient(90deg, var(--neon-dark), rgba(0, 168, 255, 0.3));
+            text-align: center;
+            border-bottom: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+        
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--neon-glow);
+            letter-spacing: 1px;
+        }
+        
+        #chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: rgba(10, 25, 47, 0.7);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 70%;
+            position: relative;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
+            line-height: 1.4;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.8), rgba(0, 123, 255, 0.8));
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 0 10px var(--neon-glow);
+            color: white;
+        }
+        
+        .bot-message {
+            background: rgba(30, 60, 114, 0.8);
+            border-bottom-left-radius: 5px;
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            box-shadow: 0 0 5px rgba(0, 168, 255, 0.3);
+        }
+        
+        .input-area {
+            padding: 15px;
+            background: rgba(12, 36, 97, 0.8);
+            display: flex;
+            border-top: 1px solid var(--neon-blue);
+        }
+        
+        #message-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(0, 40, 85, 0.8);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 5px var(--neon-glow);
+            transition: all 0.3s;
+        }
+        
+        #message-input:focus {
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+        
+        #send-button {
+            margin-left: 15px;
+            padding: 0 25px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--neon-blue), #0077ff);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px var(--neon-glow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        #send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--neon-glow);
+        }
+        
+        .typing-indicator {
+            color: var(--neon-blue);
+            font-style: italic;
+            margin: 5px 0;
+            text-shadow: 0 0 5px var(--neon-glow);
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px var(--neon-glow); }
+            50% { box-shadow: 0 0 20px var(--neon-glow); }
+            100% { box-shadow: 0 0 5px var(--neon-glow); }
+        }
+        
+        /* Полоса прокрутки */
+        #chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-track {
+            background: rgba(0, 40, 85, 0.3);
+            border-radius: 10px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 10px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Neon Blue Chat</h1>
+        </div>
+        <div id="chat-messages"></div>
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Напишите сообщение..." autocomplete="off">
+            <button id="send-button">Отправить</button>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // НАСТРОЙКИ (замените на свои данные)
+        // =============================================
+        const TELEGRAM_BOT_TOKEN = '8193753656:AAFw7d9vULwYekSD8-Ie0TRRShjOHeUMxk0';  // Получите у @BotFather
+        const TELEGRAM_CHAT_ID = '5417959190';      // Получите у @userinfobot
+        const POLLING_INTERVAL = 3000;              // Проверка новых сообщений каждые 3 секунды
+        // =============================================
+
+        // Хранилище последних сообщений
+        let lastUpdateId = 0;
+        
+        // Добавление сообщения в чат
+        function addMessage(text, isUser) {
+            const chat = document.getElementById('chat-messages');
+            const msgElement = document.createElement('div');
+            msgElement.classList.add('message');
+            msgElement.classList.add(isUser ? 'user-message' : 'bot-message');
+            msgElement.textContent = text;
+            chat.appendChild(msgElement);
+            chat.scrollTop = chat.scrollHeight;
+        }
+        
+        // Отправка сообщения в Telegram
+        function sendToTelegram(message) {
+            if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+                console.error("Не настроен Telegram токен или chat_id!");
+                return;
+            }
+            
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Сообщение отправлено в Telegram:', data);
+                lastUpdateId = data.result.message_id; // Обновляем последний ID
+            })
+            .catch(error => console.error('Ошибка отправки:', error));
+        }
+        
+        // Проверка новых сообщений от бота
+        function checkBotMessages() {
+            if (!TELEGRAM_BOT_TOKEN) return;
+            
+            fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${lastUpdateId + 1}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok && data.result.length > 0) {
+                    data.result.forEach(update => {
+                        if (update.message && update.message.text && !update.message.from.is_bot) {
+                            const messageText = update.message.text;
+                            
+                            // Показываем ответ бота в чате
+                            if (messageText.toLowerCase().includes('бот:')) {
+                                const botResponse = messageText.replace(/бот:\s*/i, '');
+                                addMessage(botResponse, false);
+                            }
+                            
+                            lastUpdateId = update.update_id;
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Ошибка проверки сообщений:', error));
+        }
+        
+        // Обработка отправки сообщения
+        function handleSendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, true);
+                input.value = '';
+                
+                // Отправка в Telegram
+                sendToTelegram(message);
+                
+                // Имитация набора сообщения ботом
+                setTimeout(() => {
+                    const typing = document.createElement('div');
+                    typing.className = 'typing-indicator';
+                    typing.textContent = 'Бот печатает...';
+                    document.getElementById('chat-messages').appendChild(typing);
+                    
+                    setTimeout(() => {
+                        if (document.getElementById('chat-messages').contains(typing)) {
+                            document.getElementById('chat-messages').removeChild(typing);
+                        }
+                    }, 2000);
+                }, 500);
+            }
+        }
+        
+        // Инициализация чата
+        document.addEventListener('DOMContentLoaded', () => {
+            // Приветственное сообщение
+            setTimeout(() => {
+                addMessage("Привет! Я твой Neon Blue чат-бот. Напиши мне что-нибудь!", false);
+            }, 800);
+            
+            // Назначение обработчиков
+            document.getElementById('send-button').addEventListener('click', handleSendMessage);
+            document.getElementById('message-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSendMessage();
+            });
+            
+            // Проверка новых сообщений от бота
+            setInterval(checkBotMessages, POLLING_INTERVAL);
+        });
+    </script>
+</body>
+</html>
